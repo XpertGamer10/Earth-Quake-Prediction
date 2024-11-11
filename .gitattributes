@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 *.pkl filter=lfs diff=lfs merge=lfs -text
+=======
+.pkl filter=lfs diff=lfs merge=lfs -text
+>>>>>>> e97051a (model)
