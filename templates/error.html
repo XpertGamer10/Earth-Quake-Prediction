@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Error</title>
+
+    <!-- CSS FILES -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,400;0,700;1,200&family=Unbounded:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap-icons.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/tooplate-kool-form-pack.css') }}" rel="stylesheet">
+    <style>
+        body {
+            background-image: url("/static/images/people-practicing-social-integration.jpg");
+            background-size: cover;
+            /* Ensures the image covers the entire screen */
+            background-position: center;
+            /* Centers the image */
+            background-repeat: no-repeat;
+            /* Prevents the image from repeating */
+            height: 100vh;
+            /* Sets the height of the body to the full viewport height */
+            margin: 0;
+            /* Removes default body margins */
+            overflow: hidden;
+            /* Prevents scrollbars if not needed */
+            position: relative;
+            /* Makes the body a containing block for the pseudo-element */
+        }
+
+        body::before {
+            content: "";
+            /* Ensures the pseudo-element is displayed */
+            position: absolute;
+            /* Positions it relative to the body */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Adds a black overlay with 50% opacity */
+            z-index: 1;
+            /* Places the overlay above the background image */
+            pointer-events: none;
+            /* Allows interaction with elements beneath the overlay */
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <header class="site-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h1 class="text-danger">An Error Occurred</h1>
+                        <p class="text-white">{{ error_message }}</p>
+                        <a href="{{ url_for('index') }}" class="btn btn-primary">Go Back to Home</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </main>
+
+    <!-- JAVASCRIPT FILES -->
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/countdown.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/init.js') }}"></script>
+</body>
+
+</html>

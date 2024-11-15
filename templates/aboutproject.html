@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>About the Earthquake Predictor Project</title>
+
+    <!-- CSS FILES -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,400;0,700;1,200&family=Unbounded:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap-icons.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/tooplate-kool-form-pack.css') }}" rel="stylesheet">
+</head>
+
+<body class="">
+
+    <main>
+
+        <header class="site-header w-25" style="padding-top:0;padding-bottom:0">
+            <div class="container">
+                <img src="{{ url_for('static', filename='images/KVS logo.png') }}" alt="kvs" class="w-25">
+            </div>
+        </header>
+
+        <section class="d-flex justify-content-center align-items-center" id="section_1" style="margin-top: 88px;">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6 col-12 mx-auto w-100">
+                        <h1 class="mb-4 mt-2 pb-2 text-center text-white w-100">
+                            About the Earthquake Predictor Project
+                        </h1>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <p class="text-white fs-5"
+                                style="text-align: justify;font-style: initial;margin-left: 34px;margin-right: -56px;">
+                                The project, titled "Earthquake Predictor," developed by Ayush Dey from Kendriya
+                                Vidyalaya Barrackpore AFS, leverages machine learning to predict the intensity of
+                                earthquakes on the Richter scale based on geospatial parameters like latitude,
+                                longitude, and depth. Earthquakes are natural disasters that often cause widespread
+                                destruction, and predicting their severity can help mitigate their impact by preparing
+                                communities in advance.
+
+                                The core of the model is built using a linear regression algorithm, which is a
+                                fundamental machine learning technique. The model takes three primary inputs: latitude,
+                                longitude, and depth of a particular location. These factors influence the magnitude and
+                                intensity of seismic activities in the area. By training the model on a dataset
+                                containing past earthquake data, including these parameters, the system learns to
+                                predict the expected Richter scale value of earthquakes for new input locations.
+
+                                The project uses a dataset with features such as timestamp, latitude, longitude,
+                                magnitude, and depth. The model's predictions help assess potential dangers and offer
+                                insights into damage severity, enabling authorities to take necessary precautions. Once
+                                the model is trained, users can input coordinates (latitude, longitude) and depth to
+                                obtain a predicted earthquake magnitude.
+
+                                This model has significant applications in disaster management and can aid in the
+                                development of early-warning systems to protect lives and property. As earthquakes
+                                cannot be fully predicted, having a model that can estimate their intensity based on
+                                geospatial data is a step forward in disaster prevention and safety.
+
+                                The project combines machine learning techniques with real-world applications to address
+                                a critical societal need, showcasing Ayush Dey's commitment to using technology for the
+                                betterment of society. The project is guided by Mr. A. Anand, PGT, Physics, Kendriya
+                                Vidyalaya Barrackpore (AFS).
+                            </p>
+                            <div><a href="http://127.0.0.1:5000">
+                                    <button type="button" class="btn btn-light">Home Page</button>
+                                    </a></div>
+                        </div>
+                        <div class="col-lg-4 d-flex h-50 justify-content-center mt-5">
+                            <img src="{{ url_for('static', filename='images/My pic.png') }}" alt="my image"
+                                class="ms-5">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-wrap">
+                <video autoplay="" loop="" muted="" class="custom-video" poster="">
+                    <source src="{{ url_for('static', filename='videos/video.mp4') }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </section>
+    </main>
+
+    <!-- JAVASCRIPT FILES -->
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/countdown.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/init.js') }}"></script>
+
+</body>
+
+</html>
