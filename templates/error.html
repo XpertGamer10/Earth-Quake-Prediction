@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Error</title>
+
+    <!-- CSS FILES -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,400;0,700;1,200&family=Unbounded:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap-icons.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/tooplate-kool-form-pack.css') }}" rel="stylesheet">
+    <style>
+        /* Chatbot Container */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            max-width: 100%;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .chatbot-header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+
+        .chatbot-input {
+            display: flex;
+            border-top: 1px solid #ccc;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            outline: none;
+        }
+
+        .chatbot-input button {
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .chatbot-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main>
+        <header class="site-header hero-bg h-100">
+            <div class="container-fluid position-relative z-1">
+                <div class="" style="
+                    position: fixed;
+                    z-index: 1000;
+                    top: 1rem;
+                    margin-left: 1rem;
+                "><img src="/static/images/KVS%20logo.png" alt="kvs" class="w-50"></div>
+                <div class=" row">
+                    <div class="col-12 text-center">
+                        <h1 class="text-danger">An Error Occurred</h1>
+                        <p class="text-white">{{ error_message }}</p>
+                        <a href="{{ url_for('index') }}" class="btn btn-primary">Go Back to Home</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </main>
+
+    <!-- Chatbot Interface -->
+    <div class="chatbot-container" id="chatbot">
+        <div class="chatbot-header">AI Support Chat</div>
+        <div class="chatbot-messages" id="chatbot-messages"></div>
+        <div class="chatbot-input">
+            <input type="text" id="chatbot-input" placeholder="Ask a question...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    <button class="chatbot-toggle" onclick="toggleChatbot()">💬</button>
+
+    <!-- JAVASCRIPT FILES -->
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/countdown.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/init.js') }}"></script>
+
+    <script>
+        function toggleChatbot() {
+            const chatbot = document.getElementById('chatbot');
+            const toggleButton = document.querySelector('.chatbot-toggle');
+            chatbot.style.display = chatbot.style.display === 'none' ? 'flex' : 'none';
+            toggleButton.style.display = 'none'; // Hide toggle button when chat opens
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatbot-input');
+            const message = input.value;
+            if (message.trim() === '') return;
+
+            // Display user message
+            const messages = document.getElementById('chatbot-messages');
+            const userMessage = document.createElement('div');
+            userMessage.textContent = message;
+            userMessage.style.textAlign = 'right';
+            messages.appendChild(userMessage);
+
+            // Clear input
+            input.value = '';
+
+            // Send message to AI service
+            fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Display AI response
+                    const aiMessage = document.createElement('div');
+                    aiMessage.textContent = data.response;
+                    messages.appendChild(aiMessage);
+                    messages.scrollTop = messages.scrollHeight;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        // Allow "Enter" key to send message
+        document.getElementById('chatbot-input').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Close chat when clicked outside
+        window.addEventListener('click', function (e) {
+            const chatbot = document.getElementById('chatbot');
+            const toggleButton = document.querySelector('.chatbot-toggle');
+            if (!chatbot.contains(e.target) && !toggleButton.contains(e.target)) {
+                chatbot.style.display = 'none';
+                toggleButton.style.display = 'flex'; // Show toggle button again
+            }
+        });
+    </script>
+
+</body>
+
+</html>

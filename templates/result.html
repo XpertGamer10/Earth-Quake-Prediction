@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="Earthquake Prediction Result Page">
+    <meta name="author" content="Ayush Dey">
+
+    <title>Earthquake Prediction Result</title>
+
+    <!-- CSS FILES -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap-icons.css') }}" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: white;
+        }
+
+        .hero-section {
+            position: relative;
+            z-index: 2;
+        }
+
+        table {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        th,
+        td {
+            color: #fff;
+        }
+
+        .video-wrap {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .video-wrap video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            max-width: 100%;
+            background-color: #333;
+            border: 1px solid #555;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .chatbot-header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            max-height: 300px;
+            background-color: #222;
+        }
+
+        .chatbot-messages div {
+            margin: 10px 0;
+        }
+
+        .chatbot-input {
+            display: flex;
+            border-top: 1px solid #555;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            outline: none;
+            background-color: #444;
+            color: #fff;
+        }
+
+        .chatbot-input button {
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .chatbot-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            z-index: 10;
+        }
+
+        .chat-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <header class="site-header py-3" style="position: relative;z-index: 1000;">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-3"><img src="{{ url_for('static', filename='images/KVS logo.png') }}" alt="kvs"
+                            class="w-25"></div>
+                    <div class="col-9 align-items-center">
+                        <h1 style="font-size: 50px;font-weight: bold;">Earthquake Prediction Result</h1>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="hero-section d-flex justify-content-center align-items-center">
+            <div class="container-fluid mt-5">
+                <div class="row">
+                    <div class="col-12 col-lg-8 mx-auto">
+                        <table class="table table-bordered text-white fs-4">
+                            <tbody>
+                                <!-- Data Rows -->
+                                <tr>
+                                    <td><strong>Predicted Richter Scale Value:</strong></td>
+                                    <td>{{ prediction }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Danger Level:</strong></td>
+                                    <td>{{ danger_level }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Damage Severity:</strong></td>
+                                    <td>{{ damage_severity }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Precautions:</strong></td>
+                                    <td>{{ precautions }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Probability of Earthquake in next 2-3 months</strong></td>
+                                    <td>{{ probability }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-12 text-center">
+                        <a href="{{ url_for('index') }}">
+                            <button type="button" class="btn btn-light">Home Page</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="video-wrap">
+            <video autoplay loop muted class="custom-video">
+                <source src="{{ url_for('static', filename='videos/video.mp4') }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </main>
+
+    <!-- Chatbot -->
+    <div class="chat-overlay" id="chat-overlay" onclick="closeChat()"></div>
+    <div class="chatbot-container" id="chatbot">
+        <div class="chatbot-header">AI Support Chat</div>
+        <div class="chatbot-messages" id="chatbot-messages"></div>
+        <div class="chatbot-input">
+            <input type="text" id="chatbot-input" placeholder="Ask a question..." onkeydown="checkEnter(event)">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    <button class="chatbot-toggle" onclick="toggleChatbot()">💬</button>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        function toggleChatbot() {
+            const chatbot = document.getElementById('chatbot');
+            const overlay = document.getElementById('chat-overlay');
+            const toggleButton = document.querySelector('.chatbot-toggle');
+
+            chatbot.style.display = 'flex';
+            overlay.style.display = 'block';
+            toggleButton.style.display = 'none';
+        }
+
+        function closeChat() {
+            const chatbot = document.getElementById('chatbot');
+            const overlay = document.getElementById('chat-overlay');
+            const toggleButton = document.querySelector('.chatbot-toggle');
+
+            chatbot.style.display = 'none';
+            overlay.style.display = 'none';
+            toggleButton.style.display = 'flex';
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatbot-input');
+            const message = input.value.trim();
+            if (!message) return;
+
+            const messages = document.getElementById('chatbot-messages');
+
+            const userMessage = document.createElement('div');
+            userMessage.textContent = message;
+            userMessage.style.textAlign = 'right';
+            userMessage.style.color = 'white';
+            messages.appendChild(userMessage);
+
+            input.value = '';
+
+            fetch('/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const aiMessage = document.createElement('div');
+                    aiMessage.textContent = data.response;
+                    aiMessage.style.color = 'lightblue';
+                    messages.appendChild(aiMessage);
+                    messages.scrollTop = messages.scrollHeight;
+                })
+                .catch(console.error);
+        }
+
+        function checkEnter(event) {
+                    if (event.key === 'Enter') {
+                        sendMessage();
+                    }
+                }
+            </script>

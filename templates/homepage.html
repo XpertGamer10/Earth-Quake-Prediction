@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Earthquake Predictor</title>
+
+    <!-- CSS FILES -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,400;0,700;1,200&family=Unbounded:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap-icons.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/tooplate-kool-form-pack.css') }}" rel="stylesheet">
+    <style>
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            max-width: 100%;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .chatbot-header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+
+        .chatbot-input {
+            display: flex;
+            border-top: 1px solid #ccc;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            outline: none;
+        }
+
+        .chatbot-input button {
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .chatbot-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            z-index: 1001;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main>
+
+        <header class="site-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-3 col-md-3"><img src="{{ url_for('static', filename='images/KVS logo.png') }}"
+                            alt="kvs" class="w-25"></div>
+                    <div class="align-items-center col-6 col-lg-6 d-flex justify-content-center text-center">
+                        <div class="">
+                            <h2 class="text-white">Welcome to the Earthquake Predictor</h2>
+                            <small class="fw-bold text-white">This project predicts the expected magnitude of an
+                                earthquake based on latitude, longitude, and depth inputs. The prediction will give an
+                                estimate of the potential danger level, damage severity, and recommended
+                                precautions.</small>
+                        </div>
+                    </div>
+                    <div class="col-3 text-end">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#exampleModalCenter" fdprocessedid="l92bi">
+                            Accuracy
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="hero-section d-flex justify-content-center align-items-center">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-5 col-12 mx-auto">
+                        <form class="custom-form login-form" action="{{ url_for('predict') }}" role="form"
+                            method="post">
+                            <div class="form-floating mb-4 p-0">
+                                <input type="text" name="latitude" id="latitude" class="form-control custom-input"
+                                    placeholder="Latitude" required="">
+                                <label for="latitude">Latitude</label>
+                            </div>
+                            <div class="form-floating mb-4 p-0">
+                                <input type="text" name="longitude" id="longitude" class="form-control custom-input"
+                                    placeholder="Longitude" required="">
+                                <label for="longitude">Longitude</label>
+                            </div>
+                            <div class="form-floating p-0">
+                                <input type="text" name="depth" id="depth" class="form-control custom-input"
+                                    placeholder="depth" required="">
+                                <label for="depth">Depth</label>
+                            </div>
+                            <div class="row justify-content-center align-items-center">
+                                <div class="col-lg-5 col-12">
+                                    <button type="submit" class="form-control">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-wrap">
+                <video autoplay="" loop="" muted="" class="custom-video" poster="">
+                    <source src="{{ url_for('static', filename='videos/video.mp4') }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </section>
+        <div style="
+            margin-top: calc(100vh - 107vh);
+            margin-left: 12px;
+            position: relative;
+            z-index: 1000;
+        "><a class="btn btn-light" href="{{ url_for('about_project') }}" role="button">About Project</a></div>
+        <div style="
+            position: fixed;
+            z-index: 1000;
+            margin-left: 5rem;
+            margin-top: -2rem;
+            width: 93%;
+            text-align: center;
+        ">
+            <h6 class="font-monospace fs-6 fw-light text-white">This model can make mistakes. Please read important info
+            </h6>
+        </div>
+
+        <div class="fade modal" id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle"
+            style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="justify-content-between modal-header p-2">
+                        <h5 class="fs-2 modal-title" id="exampleModalCenterTitle">Accuracy</h5>
+                        <button type="button" class="btn-close me-0" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-2">
+                        <div class="g-2 row">
+                            <div class="col-6">Mean Squared Error:</div>
+                            <div class="col-6 text-center">0.4049</div>
+                            <div class="col-6">R-squared:</div>
+                            <div class="col-6 text-center">0.7792</div>
+                            <div class="col-6">Mean Absolute Error:</div>
+                            <div class="col-6 text-center">0.4335</div>
+                            <div class="col-6">Root Mean Squared Error:</div>
+                            <div class="col-6 text-center">0.6363</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Chatbot Interface -->
+    <div class="chatbot-container" id="chatbot">
+        <div class="chatbot-header">AI Support Chat</div>
+        <div class="chatbot-messages" id="chatbot-messages"></div>
+        <div class="chatbot-input">
+            <input type="text" id="chatbot-input" placeholder="Ask a question..."
+                onkeydown="if (event.key === 'Enter') sendMessage()">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    <button class="chatbot-toggle" id="chatbot-btn" onclick="toggleChatbot()">💬</button>
+
+    <!-- JAVASCRIPT FILES -->
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/countdown.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/init.js') }}"></script>
+    <script>
+        function toggleChatbot() {
+            const chatbot = document.getElementById('chatbot');
+            const chatbotBtn = document.getElementById('chatbot-btn');
+            if (chatbot.style.display === 'none' || chatbot.style.display === '') {
+                chatbot.style.display = 'flex';
+                chatbotBtn.style.display = 'none';
+            } else {
+                chatbot.style.display = 'none';
+                chatbotBtn.style.display = 'flex';
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatbot-input');
+            const message = input.value;
+            if (message.trim() === '') return;
+
+            // Display user message
+            const messages = document.getElementById('chatbot-messages');
+            const userMessage = document.createElement('div');
+            userMessage.textContent = message;
+            userMessage.style.textAlign = 'right';
+            userMessage.style.color = 'white';
+            userMessage.style.backgroundColor = '#007bff';
+            userMessage.style.padding = '5px';
+            userMessage.style.margin = '5px 0';
+            messages.appendChild(userMessage);
+
+            // Clear input
+            input.value = '';
+
+            // Send message to backend
+            fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Display AI response
+                    const aiMessage = document.createElement('div');
+                    aiMessage.textContent = data.response;
+                    aiMessage.style.textAlign = 'left';
+                    aiMessage.style.color = 'black';
+                    aiMessage.style.backgroundColor = '#f1f1f1';
+                    aiMessage.style.padding = '5px';
+                    aiMessage.style.margin = '5px 0';
+                    messages.appendChild(aiMessage);
+                    messages.scrollTop = messages.scrollHeight;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        document.addEventListener('click', function (event) {
+            const chatbot = document.getElementById('chatbot');
+            const chatbotBtn = document.getElementById('chatbot-btn');
+            if (!chatbot.contains(event.target) && !chatbotBtn.contains(event.target)) {
+                chatbot.style.display = 'none';
+                chatbotBtn.style.display = 'flex';
+            }
+        });
+    </script>
+
+</body>
+
+</html>
